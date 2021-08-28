@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+  		<title>CannaBiotic sockets</title>
+	</head>
+	<body>
+		<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<script src="/socket.io.js"></script>
+		<script>
+  			var socket = io.connect('https://cannabiotic.shtibel.com');
+  			socket.on('connect',function(){
+                $('#get_chat_history').click(function(){
+                    var data = {
+                        'group_id' : $('.group_id').val()
+                    }
+                    socket.emit('get_chat_history', data)
+                })
+
+                socket.on('chat_history_received', function(data){
+                    console.log('chat_history_received', data)
+                });
+
+                $('#send_msg').click(function(){
+                    var data = {
+                        'sender_id' : $('.sender_id').val(),
+                        'group_id' : $('.group_id').val(),
+                        'message' : $('.message').val(),
+                        'parent_msg_id' : $('.parent_msg_id').val()
+                    }
+                    socket.emit('send_message', data)
+                })
+
+                socket.on('message_sent', function(data){
+                    console.log('message_sent', data)
+                });
+
+                $('#get_groups').click(function(){
+                    var data = {
+                        'user_id' : $('.user_id').val()
+                    }
+                    socket.emit('get_groups', data)
+                })
+
+                socket.on('groups_listing', function(data){
+                    console.log('groups_listing', data)
+                });
+
+                $('#delete_msg').click(function(){
+                    var data = {
+                        'user_id' : $('.user_id').val(),
+                        'group_id' : $('.group_id').val(),
+                        'message_id' : $('.message_id').val(),
+                    }
+                    socket.emit('delete_message', data)
+                })
+
+                socket.on('message_deleted', function(data){
+                    console.log('message_deleted', data)
+                });
+
+                $('#delete_product').click(function(){
+                    var data = {
+                        'message' : $('.message').val()
+                    }
+                    socket.emit('delete_product', data)
+                })
+
+                socket.on('product_deleted', function(data){
+                    console.log('product_deleted', data)
+                });
+
+                $('#get_groups_user_settings').click(function(){
+                    var data = {
+                        'user_id' : $('.user_id').val(),
+                        'group_ids' : $('.group_ids').val(),
+                        'group_type' : $('.group_type').val()
+                    }
+                    socket.emit('get_groups_user_settings', data)
+                })
+
+                socket.on('get_groups_user_settings_received', function(data){
+                    console.log('get_groups_user_settings_received', data)
+                });
+  			});
+		</script>
+        <input type="text" class="sender_id" placeholder="Sender id" />&nbsp;
+        <input type="text" class="group_id" placeholder="Group id" />&nbsp;
+        <input type="text" class="message" placeholder="Message" />&nbsp;
+        <input type="text" class="parent_msg_id" placeholder="Parent msg id" />&nbsp;
+        <input type="text" class="user_id" placeholder="User id" />&nbsp;
+        <input type="text" class="message_id" placeholder="Message id" />&nbsp;
+        <input type="text" class="group_ids" placeholder="Group ids" />&nbsp;
+        <input type="text" class="group_type" placeholder="Group type" />&nbsp;
+
+        <input type="submit" id="get_chat_history" value="Get chat history"/>
+        <input type="submit" id="send_msg" value="Send msg"/>
+        <input type="submit" id="get_groups" value="Get groups"/>
+        <input type="submit" id="delete_msg" value="Delete msg"/>
+        <input type="submit" id="delete_product" value="Delete product"/>
+        <input type="submit" id="get_groups_user_settings" value="Get group user settings"/>
+	</body>
+</html>
